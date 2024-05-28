@@ -17,12 +17,30 @@ describe("Testing APIs", () => {
     test("Status  200 and return all topics", () => {
       return request(app)
       .get('/api/topics')
-      // .expect(200)
-      // .then(({body}) =>{
-      //   expect(body).toHaveLength()
+      .expect(200)
+      .then(({body}) =>{
+        expect(body).toHaveLength(3)
 
 
-      // })
+      })
+        
+    })
+    test("Status  200 and return an array with the properties slug and description", () => {
+      return request(app)
+      .get('/api/topics')
+      .expect(200)
+      .then(({body}) =>{
+        const arrayOfTopics = body
+
+        arrayOfTopics.forEach((topic)=>{
+          expect(topic).toMatchObject({
+            description:expect.any(String),
+            slug:expect.any(String)
+          })
+        })
+
+
+      })
         
     })
 })
