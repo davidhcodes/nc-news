@@ -6,6 +6,7 @@ const express = require('express');
 
  /* Importing the controller files */
  const {getTopics} = require('../controllers/topics.controller');
+ const {getArticles} = require('../controllers/articles.controller');
  const {getAPIs} = require('../controllers/apis.controller');
 
 
@@ -16,19 +17,30 @@ app.use(express.json())
 
  /* API calls */
  app.get('/api/topics', getTopics)
+
  app.get('/api', getAPIs)
 
+ app.get('/api/articles/:article_id', getArticles)
 
+ app.use((err, req, res, next) => {
+  
+   if (err.code === '22P02') {
+     res.status(400).send({ msg: 'Bad Request' });
+   } else {
+     next(err);
+   }
+ });
 
-// custom errors
+//custom errors
 app.use((err, req, res, next) => {
   if (err.code) {
-    next()
+ 
     res.status(err.status).send({ msg: err.msg });
   } else {
     next(err);
   }
 });
+
 
 
 app.use((err, req, res, next) => {
