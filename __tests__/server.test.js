@@ -52,7 +52,6 @@ describe("Testing APIs", () => {
     .get('/api')
     .expect(200)
     .then(({body}) =>{
-      console.log(body)
       expect(body).toMatchObject(
         {
           "GET /api": {
