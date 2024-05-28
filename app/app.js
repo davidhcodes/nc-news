@@ -6,6 +6,7 @@ const express = require('express');
 
  /* Importing the controller files */
  const {getTopics} = require('../controllers/topics.controller');
+ const {getAPIs} = require('../controllers/apis.controller');
 
 
  /* Middleware functions */
@@ -15,6 +16,7 @@ app.use(express.json())
 
  /* API calls */
  app.get('/api/topics', getTopics)
+ app.get('/api', getAPIs)
 
 
 
