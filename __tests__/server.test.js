@@ -4,6 +4,7 @@ const seed = require('../db/seeds/seed.js')
 const request = require('supertest')
 const express= require('express');
 const app = require("../app/app.js");
+const fs = require('fs/promises');
 
 const { articleData, commentData, topicData, userData } = require('../db/data/test-data/index')
 
@@ -35,45 +36,19 @@ describe("Testing APIs", () => {
 })
     
 
-describe("Testing APIs for GET /api", () => {
-  test("Status  200 and return all available api endpoints", () => {
+describe("Testing APIs for GET /api",  () => {
+  it("Status  200 and return all available api endpoints", async () => {
+
+    /* Retrieves the endpoints file data and parses the data into a object */
+    const endpointFileData = await fs.readFile("./endpoints.json", "utf-8")
+    const endPoints = JSON.parse(endpointFileData)
+
+
     return request(app)
     .get('/api')
     .expect(200)
     .then(({body}) =>{
-      expect(body).toMatchObject(
-        {
-          "GET /api": {
-            "description": "serves up a json representation of all the available endpoints of the api"
-          },
-          "GET /api/topics": {
-            "description": "serves an array of all topics",
-            "queries": [],
-            "exampleResponse": {
-              "topics": [{ "slug": "football", "description": "Footie!" }]
-            }
-          },
-          "GET /api/articles": {
-            "description": "serves an array of all articles",
-            "queries": ["author", "topic", "sort_by", "order"],
-            "exampleResponse": {
-              "articles": [
-                {
-                  "title": "Seafood substitutions are increasing",
-                  "topic": "cooking",
-                  "author": "weegembump",
-                  "body": "Text from the article..",
-                  "created_at": "2018-05-30T15:59:13.341Z",
-                  "votes": 0,
-                  "comment_count": 6
-                }
-              ]
-            }
-          }
-        }
-        
-
-      )
+      expect(body).toMatchObject(endPoints)
 
 
     })
