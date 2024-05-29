@@ -111,4 +111,37 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
       
   })
 
+  describe("Testing APIs for GET /api/articles", () => {
+    test("Status  200 and return an array of article objects with the expected properties", () => {
+      return request(app)
+      .get('/api/articles')
+      .expect(200)
+      .then(({body}) =>{
+
+   
+        const arrayOfArticles = body
+
+   
+        arrayOfArticles.forEach((topic)=>{
+          expect(topic).toMatchObject({
+            author:expect.any(String),
+            article_id:expect.any(Number),
+            title:expect.any(String),
+            topic:expect.any(String),
+            created_at:expect.any(String),
+            votes:expect.any(Number),
+            article_img_url:expect.any(String),
+            comment_count:expect.any(Number)
+          })
+        })
+
+        expect(arrayOfArticles.length).toBe(5)
+
+
   
+  
+      })
+  
+  
+      })
+    })
