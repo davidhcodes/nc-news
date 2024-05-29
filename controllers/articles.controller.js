@@ -1,5 +1,5 @@
 
-const {fetchArticles, fetchArticlesById, fetchCommentsByArticleID, insertCommentsByArticleID, updateArticle} = require('../models/articles.models')
+const {fetchArticles, fetchArticlesById, fetchCommentsByArticleID, insertCommentsByArticleID, updateArticle, removeComment, patchArticle} = require('../models/articles.models')
 
 exports.getArticles =  (req, res, next) =>{
     
@@ -64,3 +64,24 @@ exports.patchArticle = (req, res, next) => {
     }).catch(next)
   
   };
+
+
+  
+  exports.deleteComment =  (req, res, next) =>
+    {
+      const comment_id = req.params.comment_id
+      
+     
+        removeComment(comment_id) 
+        .then((deletedata) => {
+          if(deletedata.rowCount === 0){
+           next({status: 404, msg:"Comment does not exist"})
+          }else res.status(204).send()
+       
+       
+         }).catch((err)=>{
+           next(err)
+          
+         })
+           
+    }
