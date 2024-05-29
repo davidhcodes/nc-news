@@ -6,7 +6,7 @@ const express = require('express');
 
  /* Importing the controller files */
  const {getTopics} = require('../controllers/topics.controller');
- const {getArticles, getArticlesById, getCommentsByArticleId, postCommentsByArticleId} = require('../controllers/articles.controller');
+ const {getArticles, getArticlesById, getCommentsByArticleId, postCommentsByArticleId, patchArticle} = require('../controllers/articles.controller');
  const {getAPI} = require('../controllers/api.controller');
 
 
@@ -29,6 +29,7 @@ app.use(express.json())
 
  app.post('/api/articles/:article_id/comments', postCommentsByArticleId);
 
+ app.patch('/api/articles/:article_id', patchArticle)
 
  app.use((err, req, res, next) => {
   
