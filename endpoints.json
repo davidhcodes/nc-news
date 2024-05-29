@@ -60,6 +60,19 @@
                }
       ]
     }
-  }
+  },
+  "POST /api/articles/:article_id/comments ": {
+    "description": "Posts a new comment to the database referenced by the article id and returns the comment about the specific article referenced by the article id",
+    "queries": ["author", "body"],
+    "exampleResponse": {
+      "articles": [
+        {
+            "username": "butter_bridge",
+            "body":" Great article!"
+          
+        }
+      ]
+    }
+  },
   
 }
