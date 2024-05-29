@@ -269,7 +269,7 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
               }
               )
           });  
-          test("Respond with status 200 and the updated article object to change the number of votes", () => {
+          test("Respond with status 404 when the article_id does not exist", () => {
             let newVote = 1;
               return request(app)
               .patch('/api/articles/99999')
@@ -287,7 +287,7 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
           test("400: respond with an error message for an invalid article_id", () => {
             let newVote = 1;
             return request(app)
-            .patch('/api/articles/SDSDS')
+            .patch('/api/articles/not-a-valid-article')
             .send(
                 {
                   inc_votes: newVote,
@@ -299,5 +299,33 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
       })
 
     })
+
+
+    describe("DELETE /api/comments/:comment_id", () => {
+      test("204: error status code 204, no response expected", () => {
+          return request(app)
+          .delete('/api/comments/2')
+          .expect(204)
+          }
+          )
+          test("404: error status code 404, no response expected", () => {
+            return request(app)
+            .delete('/api/comments/9999')
+            .expect(404)
+            .then(({body})=>{
+              expect(body.msg).toBe("Comment does not exist")
+            })
+            }
+            )
+            test("400: respond with an error message for an invalid comment_id", () => {
+              return request(app)
+              .delete('/api/comments/not-a-valid-comment')
+              .expect(400)
+              .then(({body})=>{
+                expect(body.msg).toBe("Bad Request")
+              })
+        })
+  
+      });  
 
 
