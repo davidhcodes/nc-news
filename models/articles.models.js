@@ -41,3 +41,36 @@ exports.fetchArticles = ()=>{
     })
    
 }
+
+exports.fetchCommentsByArticleID = (article_id)=>{
+
+    const queryValues = []
+
+       
+     let sqlQuery = `SELECT  comments.comment_id, articles.article_id, comments.votes, comments.created_at, comments.author, comments.body
+    FROM comments
+    INNER JOIN articles ON comments.article_id = articles.article_id `
+    
+
+    if(article_id){
+    sqlQuery +=  `WHERE comments.article_id = $1 `, [article_id]
+    queryValues.push(article_id)
+    }
+    
+    sqlQuery += `ORDER BY comments.created_at DESC `
+        
+    sqlQuery+=`;`
+
+ 
+    
+    return db
+    .query(sqlQuery, queryValues)
+    .then(({rows})=>{
+
+        if(rows.length === 0){
+            return Promise.reject({ status:404, msg: "Article does not exist"});
+          }
+        return rows
+    })
+   
+}
