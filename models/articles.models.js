@@ -1,5 +1,6 @@
 const db = require('../db/connection.js');
 const { articleData } = require('../db/data/test-data/index.js');
+const {articlesTable} = require('../utils/query.js')
 
 exports.fetchArticlesById = (articleID)=>{
     
@@ -98,3 +99,38 @@ exports.insertCommentsByArticleID = ({username, body}, article_id)=>{
       
         
     }
+
+
+    
+exports.updateArticle = async (voteChange, article_id)=>{
+    let inc_votes = voteChange.inc_votes;
+    const article_id_num = Number(article_id)
+    let currentVotes = 0
+ 
+    articles = await articlesTable()
+
+   
+    articles.forEach((article)=>{
+      
+    
+        if(article.article_id === article_id_num){
+            inc_votes+=article.votes
+        }
+        
+    })
+
+    return db.query(`
+    UPDATE articles
+    SET votes = $1
+    WHERE article_id = $2
+    RETURNING*;`, [inc_votes, article_id])
+    .then(({rows})=>{
+        
+        if(rows.length === 0){
+            return Promise.reject({ status:404, msg: "Article does not exist"});
+          }
+
+
+        return rows[0]
+    })
+}
