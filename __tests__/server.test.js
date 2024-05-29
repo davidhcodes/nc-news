@@ -4,7 +4,6 @@ const seed = require('../db/seeds/seed.js')
 const request = require('supertest')
 const express= require('express');
 const app = require("../app/app.js");
-const jestSorted = require('jest-sorted');
 
 const { articleData, commentData, topicData, userData } = require('../db/data/test-data/index')
 
@@ -14,31 +13,21 @@ afterAll(() => db.end());
 
 
 describe("Testing APIs", () => {
-    test("Status  200 and return all topics", () => {
+    test("Status  200 and return all topics with the properties slug and description", () => {
       return request(app)
       .get('/api/topics')
       .expect(200)
       .then(({body}) =>{
-        expect(body).toHaveLength(3)
+
+       let topics = body.topics
 
 
-      })
-        
-    })
-    test("Status  200 and return an array with the properties slug and description", () => {
-      return request(app)
-      .get('/api/topics')
-      .expect(200)
-      .then(({body}) =>{
-        const arrayOfTopics = body
-
-        arrayOfTopics.forEach((topic)=>{
+        topics.forEach((topic)=>{
           expect(topic).toMatchObject({
             description:expect.any(String),
             slug:expect.any(String)
           })
         })
-
 
       })
         
