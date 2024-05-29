@@ -145,3 +145,55 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
   
       })
     })
+
+    describe("Testing APIs for GET /api/articles", () => {
+      test("Status 200 and return an array of comments for the specified article_id", () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({body}) =>{
+  
+     
+          const arrayOfComments = body
+  
+        
+  
+          expect(arrayOfComments.length).toBe(11)
+  
+          arrayOfComments.forEach((comment)=>{
+            expect(comment).toMatchObject({
+              author:expect.any(String),
+              comment_id:expect.any(Number),
+              body:expect.any(String),
+              article_id:expect.any(Number),
+              created_at:expect.any(String),
+              votes:expect.any(Number),
+            })
+          })
+    
+    
+        })
+    
+    
+        })
+
+      test("GET:400 and sends an appropriate status and error message when given an invalid id ", () => {
+        return request(app)
+        .get('/api/articles/not-an-article/comments')
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe('Bad Request');
+        });
+        })
+
+        test('GET:404 sends an appropriate status and error message when given a valid but non-existent article id', () => {
+          return request(app)
+          .get('/api/articles/9999/comments')
+            .expect(404)
+            .then((response) => {
+              expect(response.body.msg).toBe('Article does not exist');
+            });
+        });
+
+
+      })
