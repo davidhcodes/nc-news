@@ -6,7 +6,7 @@ const express = require('express');
 
  /* Importing the controller files */
  const {getTopics} = require('../controllers/topics.controller');
- const {getArticles, getArticlesById, getCommentsByArticleId} = require('../controllers/articles.controller');
+ const {getArticles, getArticlesById, getCommentsByArticleId, postCommentsByArticleId} = require('../controllers/articles.controller');
  const {getAPI} = require('../controllers/api.controller');
 
 
@@ -26,6 +26,10 @@ app.use(express.json())
  
  app.get('/api/articles/:article_id/comments', getCommentsByArticleId)
 
+
+ app.post('/api/articles/:article_id/comments', postCommentsByArticleId);
+
+
  app.use((err, req, res, next) => {
   
    if (err.code === '22P02') {
@@ -37,16 +41,23 @@ app.use(express.json())
 
 //custom errors
 
+app.use((err,req,res,next)=>{
+  if(err.msg){
+    res.status(err.status).send({msg: err.msg})
+    next()
+  }else{
+    
+  next(err)
+  }
+})
 
-app.use((err, req, res, next) => {
-    if (err.status) {
-      res.status(err.status).send({ msg: err.msg });
-    } else next(err);
-  });
+
+
   
-// PSQL errors
-app.use((err, req, res, next) => {
-    res.status(500).send({ msg: 'Internal Server Error' });
-  });
+  app.all('*', (req, res, next)=>{
+    res.status(404).send({ msg: 'Cannot find the page' })
+  })
+ 
+
 
 module.exports = app;
