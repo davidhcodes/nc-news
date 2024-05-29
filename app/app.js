@@ -32,15 +32,6 @@ app.use(express.json())
  });
 
 //custom errors
-app.use((err, req, res, next) => {
-  if (err.code) {
- 
-    res.status(err.status).send({ msg: err.msg });
-  } else {
-    next(err);
-  }
-});
-
 
 
 app.use((err, req, res, next) => {
