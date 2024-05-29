@@ -74,3 +74,27 @@ exports.fetchCommentsByArticleID = (article_id)=>{
     })
    
 }
+
+
+exports.insertCommentsByArticleID = ({username, body}, article_id)=>{
+   let author = username
+   let queryValues =  [username, body, article_id]
+  
+   const now = new Date ()
+    
+        return db.query(`INSERT INTO comments
+        (author, body, article_id, votes, created_at)
+        VALUES
+        ($1, $2, $3, 0, $4)
+        RETURNING * ;`, [author, body, article_id, now])
+
+     .then((result)=>{
+     
+        const newComment = result.rows
+
+           return newComment[0]
+        })
+        
+      
+        
+    }

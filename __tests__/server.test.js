@@ -146,7 +146,7 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
       })
     })
 
-    describe("Testing APIs for GET /api/articles", () => {
+    describe("Testing APIs for GET /api/articles/:article_id/comments", () => {
       test("Status 200 and return an array of comments for the specified article_id", () => {
         return request(app)
         .get('/api/articles/1/comments')
@@ -197,3 +197,43 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
 
 
       })
+
+
+      describe("Testing APIs for POST /api/articles/:article_id/comments", () => {
+        test("POST:201 inserts a new comment for a specific article id to the db and sends the new comment back to the client", () => {
+          const newComment = {
+            username: 'butter_bridge',
+            body: 'Great article!'
+          };
+          
+          return request(app)
+          .post('/api/articles/1/comments')
+          .send(newComment)
+          .expect(201)
+          .then((response) => {
+              expect(response.body.comment.author).toBe('butter_bridge');
+              expect(response.body.comment.body).toBe( 'Great article!');
+            });
+      
+          })
+  
+        test("GET:400 and sends an appropriate status and error message when given an invalid id ", () => {
+          return request(app)
+          .get('/api/articles/not-an-article/comments')
+          .expect(400)
+          .then((response) => {
+            expect(response.body.msg).toBe('Bad Request');
+          });
+          })
+  
+          test('GET:404 sends an appropriate status and error message when given a valid but non-existent article id', () => {
+            return request(app)
+            .get('/api/articles/9999/comments')
+              .expect(404)
+              .then((response) => {
+                expect(response.body.msg).toBe('Article does not exist');
+              });
+          });
+  
+  
+        })
