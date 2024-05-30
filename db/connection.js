@@ -14,9 +14,9 @@ if (ENV === 'production') {
   config.connectionString = process.env.DATABASE_URL;
   config.max = 2;
 }
-console.log(config)
-if (!process.env.PGDATABASE) {
-  throw new Error('PGDATABASE not set');
-}
 
-module.exports = new Pool();
+// if (!process.env.PGDATABASE) {
+//   throw new Error('PGDATABASE not set');
+// }
+
+module.exports = new Pool(config);
