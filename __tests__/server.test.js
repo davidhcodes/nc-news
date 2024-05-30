@@ -370,11 +370,9 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
           .get('/api/users')
           .expect(200)
           .then(({body}) =>{
-    
        
-            const arrayOfUsers = body
-    
-       
+            const arrayOfUsers = body.user_data   
+
             arrayOfUsers.forEach((topic)=>{
               expect(topic).toMatchObject({
                 username:expect.any(String),
