@@ -39,15 +39,9 @@ exports.fetchArticlesById = (articleID)=>{
 exports.fetchArticles = async (topic)=>{
     
     const queryValues = []
-    
-       
+     
     articles = await articlesTable()
 
-    if(topic){
-    if (!(articles.some(article => article.topic === topic)) ){
-        return Promise.reject({status:400, msg: "This query is invalid"})
-      }
-    }
 
     let sqlQuery =`SELECT  articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url ,  COUNT(*)::int AS comment_count 
     FROM articles
@@ -69,14 +63,20 @@ exports.fetchArticles = async (topic)=>{
 
             
     .then(({rows})=>{
-
-
-        if(rows.length === 0){
-            return Promise.reject({ status:404, msg: "There are no articles"});
-          }
+      
         return rows
     })
    
+}
+
+exports.checkTopicExists = (topic)=>{
+    return db
+    .query(`SELECT * FROM topics WHERE slug = $1`, [topic])
+    .then(({rows})=>{
+        if(!rows.length){
+            return Promise.reject({status: 404, msg: 'This query is invalid'})
+        }
+    })
 }
 
 exports.checkArticleExists = (article_id)=>{

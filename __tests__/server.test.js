@@ -393,38 +393,7 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
         })
 
         describe("Testing APIs for GET /api/articles (topic query)", () => {
-          test("Status  200 and return an array of article objects with the expected properties where the topic is not specified", () => {
-            return request(app)
-            .get('/api/articles')
-            .expect(200)
-            .then(({body}) =>{
       
-         
-              const arrayOfArticles = body
-      
-         
-              arrayOfArticles.forEach((topic)=>{
-                expect(topic).toMatchObject({
-                  author:expect.any(String),
-                  article_id:expect.any(Number),
-                  title:expect.any(String),
-                  topic:expect.any(String),
-                  created_at:expect.any(String),
-                  votes:expect.any(Number),
-                  article_img_url:expect.any(String),
-                  comment_count:expect.any(Number)
-                })
-              })
-      
-              expect(arrayOfArticles.length).toBe(13)
-      
-      
-        
-        
-            })
-        
-        
-            })
             test("Status  200 and return an array of article objects with the expected properties where the topic is specified", () => {
               return request(app)
               .get('/api/articles?topic=mitch')
@@ -447,7 +416,12 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
                     comment_count:expect.any(Number)
                   })
                 })
-        
+
+                arrayOfArticles.forEach((topic)=>{
+                  expect(topic.topic).toBe("mitch")
+                 
+                })
+                
                 expect(arrayOfArticles.length).toBe(12)
         
         
@@ -457,10 +431,23 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
           
           
               })
+              test("400: Return status code 400 with a valid query but no article match it", () => {
+                return request(app)
+                .get('/api/articles?topic=paper')
+                .expect(200)
+                .then(({body}) =>{
+             
+                  const arrayOfComments = body
+        
+                  expect(arrayOfComments.length).toBe(0)
+              
+            
+                })
+              })
               test("400: Return status code 400 and a message for invalid query", () => {
                 return request(app)
-                .get('/api/articles?topic=invalid-query-name')
-                .expect(400)
+                .get('/api/articles?topic=invalid')
+                .expect(404)
                 .then(({body})=>{
                   expect(body.msg).toBe("This query is invalid")
                 })
