@@ -1,6 +1,6 @@
 const db = require('../db/connection.js');
 const { articleData } = require('../db/data/test-data/index.js');
-const {articlesTable} = require('../utils/query.js')
+const {articlesTable, commentsTable} = require('../utils/query.js')
 
 exports.fetchArticlesById = (articleID)=>{
        const queryValues = []
@@ -79,16 +79,32 @@ exports.fetchArticles = async (topic)=>{
    
 }
 
-exports.fetchCommentsByArticleID = (article_id)=>{
+exports.checkArticleExists = (article_id)=>{
+    return db
+    .query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
+    .then(({rows})=>{
+        if(!rows.length){
+            return Promise.reject({status: 404, msg: 'Article does not exist'})
+        }
+    })
+}
+
+exports.fetchCommentsByArticleID = async (article_id)=>{
 
     const queryValues = []
 
-       
-     let sqlQuery = `SELECT  comments.comment_id, articles.article_id, comments.votes, comments.created_at, comments.author, comments.body
-    FROM comments
-    LEFT JOIN articles ON comments.article_id = articles.article_id `
-    
 
+        comments = await commentsTable()
+
+        if(article_id){
+            if (!(comments.some(comment => comment.article_id === article_id)) ){
+               
+              }
+            }
+
+
+    let sqlQuery = `SELECT  * FROM comments `
+    
     if(article_id){
     sqlQuery +=  `WHERE comments.article_id = $1 `, [article_id]
     queryValues.push(article_id)
@@ -104,9 +120,6 @@ exports.fetchCommentsByArticleID = (article_id)=>{
     .query(sqlQuery, queryValues)
     .then(({rows})=>{
 
-        if(rows.length === 0){
-            return Promise.reject({ status:404, msg: "Article does not exist"});
-          }
         return rows
     })
    

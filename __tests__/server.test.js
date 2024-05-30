@@ -180,6 +180,21 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
     
         })
 
+        test("Status 200 and return an empty array for the specified article_id with no comments", () => {
+          return request(app)
+          .get('/api/articles/2/comments')
+          .expect(200)
+          .then(({body}) =>{
+       
+            const arrayOfComments = body
+  
+            expect(arrayOfComments.length).toBe(0)
+    
+          })
+      
+      
+          })
+
       test("GET:400 and sends an appropriate status and error message when given an invalid id ", () => {
         return request(app)
         .get('/api/articles/not-an-article/comments')

@@ -1,5 +1,5 @@
 
-const {fetchArticles, fetchArticlesById, fetchCommentsByArticleID, insertCommentsByArticleID, updateArticle, patchArticle} = require('../models/articles.models')
+const {fetchArticles, fetchArticlesById, fetchCommentsByArticleID, insertCommentsByArticleID, updateArticle, patchArticle, checkArticleExists} = require('../models/articles.models')
 
 exports.getArticles =  (req, res, next) =>{
    const {topic} = req.query
@@ -31,9 +31,16 @@ exports.getCommentsByArticleId =  (req, res, next) =>{
     
     const {article_id} = req.params
 
-    fetchCommentsByArticleID(article_id)
-    .then((comment_data)=>{
-        res.status(200).send(comment_data);
+    const promises = [fetchCommentsByArticleID(article_id)]
+
+    if(article_id){
+      promises.push(checkArticleExists(article_id))
+    }
+
+   Promise.all(promises) 
+   .then((resolvedPromises)=>{
+      const comments = resolvedPromises[0]
+        res.status(200).send(comments);
        
     })
     .catch(next)
