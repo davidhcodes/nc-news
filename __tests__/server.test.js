@@ -328,4 +328,34 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
   
       });  
 
+      describe("Testing APIs for GET /api/users", () => {
+        test("Status  200 and return an array of user objects with the expected properties", () => {
+          return request(app)
+          .get('/api/users')
+          .expect(200)
+          .then(({body}) =>{
+    
+       
+            const arrayOfUsers = body
+    
+       
+            arrayOfUsers.forEach((topic)=>{
+              expect(topic).toMatchObject({
+                username:expect.any(String),
+                name:expect.any(String),
+                avatar_url:expect.any(String),
+              })
+            })
+    
+            expect(arrayOfUsers.length).toBe(4)
+    
+    
+      
+      
+          })
+      
+      
+          })
+        })
+
 
