@@ -305,6 +305,20 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
               })
             
           });  
+          test("Respond with status 400 when the inc_votes is not a number", () => {
+            let newVote = "not-a-number";
+              return request(app)
+              .patch('/api/articles/1')
+              .send(
+                  {
+                    inc_votes: newVote,
+                  })
+              .expect(400)
+              .then(({body})=>{
+                expect(body.msg).toBe("Bad Request")
+              })
+            
+          });  
 
           test("400: respond with an error message for an invalid article_id", () => {
             let newVote = 1;

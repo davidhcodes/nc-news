@@ -154,23 +154,12 @@ exports.insertCommentsByArticleID = ({username, body}, article_id)=>{
 exports.updateArticle = async (voteChange, article_id)=>{
     let inc_votes = voteChange.inc_votes;
     const article_id_num = Number(article_id)
-    let currentVotes = 0
  
     articles = await articlesTable()
 
-   
-    articles.forEach((article)=>{
-      
-    
-        if(article.article_id === article_id_num){
-            inc_votes+=article.votes
-        }
-        
-    })
-
     return db.query(`
     UPDATE articles
-    SET votes = $1
+    SET votes = votes + $1
     WHERE article_id = $2
     RETURNING*;`, [inc_votes, article_id])
     .then(({rows})=>{
