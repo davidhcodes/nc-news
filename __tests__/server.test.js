@@ -436,3 +436,59 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
           })
 
 
+          describe("Testing APIs for GET /api/articles/:article_id (comment_count)", () => {
+            test("Status  200 and return an article object with the expected properties including a comment count", () => {
+              return request(app)
+              .get('/api/articles/1')
+              .expect(200)
+              .then(({body}) =>{
+                const singleTopic = body
+
+                
+                singleTopic.forEach((topic)=>{
+                  expect(topic).toMatchObject({
+                    author:expect.any(String),
+                    article_id:expect.any(Number),
+                    body:expect.any(String),
+                    title:expect.any(String),
+                    topic:expect.any(String),
+                    created_at:expect.any(String),
+                    votes:expect.any(Number),
+                    article_img_url:expect.any(String),
+                    comment_count:expect.any(Number)
+                  })
+                })
+          
+          
+              })
+          
+          
+              })
+          
+              test("400: respond with an error message for an invalid article_id", () => {
+                return request(app)
+                .get('/api/articles/asdd')
+                .expect(400)
+                .then(({body})=>{
+                  expect(body.msg).toBe("Bad Request")
+                })
+            
+            
+                })
+          
+                test("404: respond with an error message for an non-existent article_id", () => {
+                  return request(app)
+                  .get('/api/articles/99999')
+                  .expect(404)
+                  .then(({body})=>{
+                    expect(body.msg).toBe("article does not exist")
+                  })
+              
+              
+                  })
+            
+            
+                
+                
+            })
+

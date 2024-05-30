@@ -28,7 +28,7 @@
   },
   "GET /api/articles/:article_id": {
     "description": "Returns a single object of all information about the article",
-    "queries": [],
+    "queries": ["comment_count"],
     "exampleResponse":  {
       "articles": [
         {
