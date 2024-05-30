@@ -231,6 +231,10 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
           .then((response) => {
               expect(response.body.comment.author).toBe('butter_bridge');
               expect(response.body.comment.body).toBe( 'Great article!');
+                expect(response.body.comment).toMatchObject({
+                  author:expect.any(String),
+                  body:expect.any(String)
+                })
             });
       
           })
