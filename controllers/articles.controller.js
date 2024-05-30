@@ -2,8 +2,9 @@
 const {fetchArticles, fetchArticlesById, fetchCommentsByArticleID, insertCommentsByArticleID, updateArticle, patchArticle} = require('../models/articles.models')
 
 exports.getArticles =  (req, res, next) =>{
+   const {topic} = req.query
     
-    fetchArticles()
+    fetchArticles(topic)
     .then((article_data)=>{
         res.status(200).send(article_data);
        

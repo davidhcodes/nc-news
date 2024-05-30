@@ -47,7 +47,7 @@
 
   "GET /api/articles/:article_id/comments": {
     "description": "Returns an array of all the comments about the specific article referenced by the article id",
-    "queries": ["author", "topic","sort_by", "order"],
+    "queries": [],
     "exampleResponse":  {
       "articles": [
         {
@@ -63,7 +63,7 @@
   },
   "POST /api/articles/:article_id/comments ": {
     "description": "Posts a new comment to the database referenced by the article id and returns the comment about the specific article referenced by the article id",
-    "queries": ["author", "body"],
+    "queries": [],
     "exampleResponse": {
       "articles": [
         {
@@ -76,7 +76,7 @@
   },
   "PATCH /api/articles/:article_id ": {
     "description": "Updates the number of votes in an article referenced by the article id and returns the updated article",
-    "queries": ["author", "body"],
+    "queries": [],
     "exampleResponse": {
       "articles": [
         {
