@@ -17,21 +17,40 @@ exports.fetchArticlesById = (articleID)=>{
    
 }
 
-exports.fetchArticles = ()=>{
+exports.fetchArticles = async (topic)=>{
     
+    const queryValues = []
+    
+       
+    articles = await articlesTable()
 
-    return db
-    .query(`SELECT  articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url ,COUNT(*) AS comment_count
+    if(topic){
+    if (!(articles.some(article => article.topic === topic)) ){
+        return Promise.reject({status:400, msg: "This query is invalid"})
+      }
+    }
+
+    let sqlQuery =`SELECT  articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url ,  COUNT(*) AS comment_count 
     FROM articles
-    INNER JOIN comments ON articles.article_id = comments.article_id
-    GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC;
-    `)
+     LEFT JOIN comments ON articles.article_id = comments.article_id `
+   
+     if(topic){
+        sqlQuery +=  ` WHERE articles.topic = $1 `, [topic]
+         queryValues.push(topic)
+         }
+
+    sqlQuery+=   `  GROUP BY articles.article_id  `
+
+    sqlQuery+= ` ORDER BY articles.created_at DESC`
+
+    sqlQuery+= `;`
+    return db
+    .query(sqlQuery, queryValues)      
+
+
             
     .then(({rows})=>{
 
-     
-        
         /* Strict typecasting the comment_count field so it will be a number and not a string */
         rows.forEach((article)=>{(article.comment_count) = Number(article.comment_count)})
      
@@ -136,3 +155,9 @@ exports.updateArticle = async (voteChange, article_id)=>{
 }
 
 
+exports.removeComment = (comment_id)=>{
+  
+
+    return db.query('DELETE FROM comments WHERE comment_id = $1;', [comment_id])
+
+}
