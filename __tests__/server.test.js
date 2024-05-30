@@ -5,6 +5,7 @@ const request = require('supertest')
 const express= require('express');
 const app = require("../app/app.js");
 const fs = require('fs/promises');
+const jestSorted = require('jest-sorted');
 
 const { articleData, commentData, topicData, userData } = require('../db/data/test-data/index')
 
@@ -134,7 +135,9 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
             comment_count:expect.any(Number)
           })
         })
-
+        expect([body]).toBeSortedBy('date', {
+          descending: true,
+        })
         expect(arrayOfArticles.length).toBe(13)
 
 
