@@ -3,10 +3,29 @@ const { articleData } = require('../db/data/test-data/index.js');
 const {articlesTable} = require('../utils/query.js')
 
 exports.fetchArticlesById = (articleID)=>{
-    
+       const queryValues = []
 
-    return db
-    .query(`SELECT * FROM articles WHERE article_id = $1`, [articleID])
+    
+    let sqlQuery =`SELECT  articles.author, articles.body, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(*)::int AS comment_count 
+    FROM articles
+     LEFT JOIN comments ON articles.article_id = comments.article_id `
+   
+     if(articleID){
+        sqlQuery +=  ` WHERE articles.article_id = $1 `, [articleID]
+         queryValues.push(articleID)
+         }
+
+    sqlQuery+=   `  GROUP BY articles.article_id  `
+
+    sqlQuery+= ` ORDER BY articles.created_at DESC`
+
+    sqlQuery+= `;`
+
+
+
+     return db
+     .query(sqlQuery, queryValues)    
+
     .then(({rows})=>{
 
         if(rows.length === 0){
@@ -69,7 +88,7 @@ exports.fetchCommentsByArticleID = (article_id)=>{
        
      let sqlQuery = `SELECT  comments.comment_id, articles.article_id, comments.votes, comments.created_at, comments.author, comments.body
     FROM comments
-    INNER JOIN articles ON comments.article_id = articles.article_id `
+    LEFT JOIN articles ON comments.article_id = articles.article_id `
     
 
     if(article_id){
