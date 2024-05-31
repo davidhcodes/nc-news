@@ -87,7 +87,7 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
 
     test("400: respond with an error message for an invalid article_id", () => {
       return request(app)
-      .get('/api/articles/asdd')
+      .get('/api/articles/notvalid')
       .expect(400)
       .then(({body})=>{
         expect(body.msg).toBe("Bad Request")
@@ -443,7 +443,7 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
             
                 })
               })
-              test("404: Return status code 400 and a message for invalid query", () => {
+              test("404: Return status code 404 and a message for invalid query", () => {
                 return request(app)
                 .get('/api/articles?topic=invalid')
                 .expect(404)
@@ -559,5 +559,42 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
                   
                 })
               
-            
+                describe("Testing APIs for GET /api/users/:username", () => {
+                  test("Status  200 and return a single user objects specified by the username", () => {
+                    return request(app)
+                    .get('/api/users/rogersop')
+                    .expect(200)
+                    .then(({body}) =>{
+      
+             
+                     const {user} = body
+             
+                   
+                          expect(user)
+                          .toMatchObject({
+                          username:expect.any(String),
+                          name:expect.any(String),
+                          avatar_url:expect.any(String),
+                          })
+                     
+                  
+                        })
+                      })
+                test("404: respond with an error message for an invalid username", () => {
+                  return request(app)
+                  .get('/api/users/invalidname')
+                  .expect(404)
+                  .then(({body})=>{
+                    expect(body.msg).toBe("User does not exist")
+                  })
+                    })
+                test("400: respond with an error message for an invalid username as a number", () => {
+                  return request(app)
+                  .get('/api/users/9999')
+                  .expect(400)
+                  .then(({body})=>{
+                    expect(body.msg).toBe("Bad Request")
+                  })
+                    })
+                })     
 
