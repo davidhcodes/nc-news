@@ -120,10 +120,9 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
       .then(({body}) =>{
 
    
-        const arrayOfArticles = body
+        const {articles} = body
 
-   
-        arrayOfArticles.forEach((topic)=>{
+        articles.forEach((topic)=>{
           expect(topic).toMatchObject({
             author:expect.any(String),
             article_id:expect.any(Number),
@@ -135,10 +134,10 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
             comment_count:expect.any(Number)
           })
         })
-        expect([body]).toBeSortedBy('date', {
+        expect(articles).toBeSortedBy('created_at', {
           descending: true,
         })
-        expect(arrayOfArticles.length).toBe(13)
+        expect(articles.length).toBe(13)
 
 
   
@@ -401,7 +400,7 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
               .then(({body}) =>{
         
            
-                const arrayOfArticles = body
+                const arrayOfArticles = body.articles
         
            
                 arrayOfArticles.forEach((topic)=>{
@@ -437,14 +436,14 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
                 .expect(200)
                 .then(({body}) =>{
              
-                  const arrayOfComments = body
+                  const arrayOfComments = body.articles
         
                   expect(arrayOfComments.length).toBe(0)
               
             
                 })
               })
-              test("400: Return status code 400 and a message for invalid query", () => {
+              test("404: Return status code 400 and a message for invalid query", () => {
                 return request(app)
                 .get('/api/articles?topic=invalid')
                 .expect(404)
@@ -512,4 +511,53 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
                 
                 
             })
+
+            describe("Testing APIs for GET /api/articles to check if sort (default: created_by) and order (default: desc) queries are accepted", () => {
+              test("Status  200 and return an array of article objects sorted ", () => {
+                return request(app)
+                .get('/api/articles?sort_by=author&order_by=ASC')
+                .expect(200)
+                .then(({body}) =>{
+  
+         
+                 const        {articles} = body
+         
+                 articles.forEach((topic)=>{
+                      expect(topic).toMatchObject({
+                      author:expect.any(String),
+                      article_id:expect.any(Number),
+                      title:expect.any(String),
+                      topic:expect.any(String),
+                      created_at:expect.any(String),
+                      votes:expect.any(Number),
+                      article_img_url:expect.any(String),
+                      comment_count:expect.any(Number)
+                    })
+                  })
+                  expect(articles).toBeSortedBy('author', {
+                    descending: false,
+                  })
+                    })
+                  })
+                  test("400: Return error code 400 when an invalid sort_by is requested ", () => {
+                    return request(app)
+                    .get('/api/articles?sort_by=invalidname&order_by=ASC')
+                    .expect(400)
+                    .then(({body})=>{
+                      expect(body.msg).toBe("This query is invalid")
+                    })
+                  })
+                  test("400: Return error code 400 when an invalid order_by is requested ", () => {
+                    return request(app)
+                    .get('/api/articles?order_by=invald_order')
+                    .expect(400)
+                    .then(({body})=>{
+                      expect(body.msg).toBe("This query is invalid")
+                    })
+                  })
+          
+                  
+                })
+              
+            
 

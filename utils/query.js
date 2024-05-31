@@ -29,12 +29,26 @@ exports.commentsTable = () => {
    
    }
 
-   exports.commentsPerArticle = (comments, articles) =>
-   {
+   exports.articlesTableColumns = () => {
 
-    
+ 
 
-   }
+      return db.query(`SELECT column_name
+      FROM information_schema.columns
+      WHERE table_name = 'articles';`)
+      .then(({rows})=>{
+         const columns = rows
+         let columnArray = []
+         columns.forEach((element)=>{
+            columnArray.push( element.column_name)
+         })
+        
+     
+         return columnArray
+      })
+     
+     
+     }
+     
 
-   
 

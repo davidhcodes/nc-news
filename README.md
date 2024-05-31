@@ -39,6 +39,7 @@ Additional optional dev dependencies (run "npm i [package_name] -D" to install):
 ---
 
 Link to hosted version of the page:
+https://nc-news-davidhcodes.onrender.com/api/
 
 ---
 

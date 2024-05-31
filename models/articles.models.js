@@ -1,6 +1,7 @@
 const db = require('../db/connection.js');
+const { sort } = require('../db/data/test-data/articles.js');
 const { articleData } = require('../db/data/test-data/index.js');
-const {articlesTable, commentsTable} = require('../utils/query.js')
+const {articlesTable, commentsTable, articlesTableColumns} = require('../utils/query.js')
 
 exports.fetchArticlesById = (articleID)=>{
        const queryValues = []
@@ -36,12 +37,24 @@ exports.fetchArticlesById = (articleID)=>{
    
 }
 
-exports.fetchArticles = async (topic)=>{
+exports.fetchArticles = async (topic, sort_by = 'created_at', order = 'DESC')=>{
     
     const queryValues = []
      
     articles = await articlesTable()
+    articlesColumns = await articlesTableColumns()
 
+
+    /* If the query 'sort_by' is not a valid table column to query, a 400 error is flagged */
+    if(!(sort_by==='created_by')){
+        if (!(articlesColumns.includes(sort_by)) ){
+           return Promise.reject({status: 400, msg: 'This query is invalid'})
+          }
+        }
+
+        if(!['ASC','DESC', 'asc', 'desc'].includes(order)){         
+               return Promise.reject({status: 400, msg: 'This query is invalid'})              
+            }
 
     let sqlQuery =`SELECT  articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url ,  COUNT(*)::int AS comment_count 
     FROM articles
@@ -54,7 +67,9 @@ exports.fetchArticles = async (topic)=>{
 
     sqlQuery+=   `  GROUP BY articles.article_id  `
 
-    sqlQuery+= ` ORDER BY articles.created_at DESC`
+
+   sqlQuery += ` ORDER BY articles.${sort_by} ${order} `
+
 
     sqlQuery+= `;`
     return db
