@@ -335,31 +335,94 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
 
     })
 
+    describe("Checking /api/comments/:comment_id", ()=>{
 
-    describe("DELETE /api/comments/:comment_id", () => {
-      test("204: error status code 204, no response expected", () => {
-          return request(app)
-          .delete('/api/comments/2')
-          .expect(204)
-          }
-          )
-          test("404: error status code 404, no response expected", () => {
-            return request(app)
-            .delete('/api/comments/9999')
-            .expect(404)
-            .then(({body})=>{
-              expect(body.msg).toBe("Comment does not exist")
-            })
-            }
-            )
-            test("400: respond with an error message for an invalid comment_id", () => {
+        describe("DELETE /api/comments/:comment_id", () => {
+          test("204: error status code 204, no response expected", () => {
               return request(app)
-              .delete('/api/comments/not-a-valid-comment')
-              .expect(400)
-              .then(({body})=>{
-                expect(body.msg).toBe("Bad Request")
+              .delete('/api/comments/2')
+              .expect(204)
+              }
+              )
+              test("404: error status code 404, no response expected", () => {
+                return request(app)
+                .delete('/api/comments/9999')
+                .expect(404)
+                .then(({body})=>{
+                  expect(body.msg).toBe("Comment does not exist")
+                })
+                }
+                )
+                test("400: respond with an error message for an invalid comment_id", () => {
+                  return request(app)
+                  .delete('/api/comments/not-a-valid-comment')
+                  .expect(400)
+                  .then(({body})=>{
+                    expect(body.msg).toBe("Bad Request")
+                  })
+            })
+          })
+
+      describe("PATCH /api/comments/:comment_id", () => {
+        test("200: Respond with an updated comment object with the inc_votes property updated", () => {
+          let newVote = 1;
+            return request(app)
+            .patch('/api/comments/1')
+            .send(
+              {
+                inc_votes: newVote,
               })
-        })
+            .expect(200)
+            .then(({body})=>{
+              expect(body).toMatchObject(
+                             
+                   {
+                    body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+                    votes: 17,
+                    author: "butter_bridge",
+                    article_id: 9,
+                    created_at: "2020-04-06T12:17:00.000Z",
+                   }
+                                      
+                   
+              )                                                                  
+         }
+         )
+            }
+            
+            )
+
+            test("Respond with status 404 when the comment_id does not exist", () => {
+              let newVote = 1;
+                return request(app)
+                .patch('/api/comments/99999')
+                .send(
+                    {
+                      inc_votes: newVote,
+                    })
+                .expect(404)
+                .then(({body})=>{
+                  expect(body.msg).toBe("Comment does not exist")
+                })
+              
+            });  
+            test("Respond with status 400 when the inc_votes is not a number", () => {
+              let newVote = "not-a-number";
+                return request(app)
+                .patch('/api/comments/1')
+                .send(
+                    {
+                      inc_votes: newVote,
+                    })
+                .expect(400)
+                .then(({body})=>{
+                  expect(body.msg).toBe("Bad Request")
+                })
+              
+            });  
+
+
+          })
   
       });  
 
