@@ -661,3 +661,38 @@ describe("Testing APIs for GET /api/articles/:article_id", () => {
                     })
                 })     
 
+                // describe("Testing APIs for POST /api/articles", () => {
+                //   test.only("POST:201 inserts a new article to the db and sends the new article back to the client", () => {
+                //     const newarticle = {
+                //       title: "Who is mitch?",
+                //       topic: "mitch",
+                //       author: "butter_bridge",
+                //       body: "I never knew who mitch was",
+                //       article_img_url:"https://static.standard.co.uk/s3fs-public/thumbnails/image/2015/12/21/15/stick-man.jpg?width=1200&height=900&fit=crop"
+                    
+                //     };
+                    
+                //     return request(app)
+                //     .post('/api/articles')
+                //     .send(newarticle)
+                //     .expect(201)
+                //     .then((response) => {
+
+                    
+                //      const newArticle = response.body.newArticle
+                //       expect(newArticle).toMatchObject({
+                //         author:expect.any(String),
+                //         article_id:expect.any(Number),
+                //         title:expect.any(String),
+                //         topic:expect.any(String),
+                //         created_at:expect.any(String),
+                //         votes:expect.any(Number),
+                //         article_img_url:expect.any(String),
+                //         comment_count:expect.any(Number)
+                //       })
+
+                //           })
+                //       });
+                
+                //     })
+                  

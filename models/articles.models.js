@@ -189,9 +189,25 @@ exports.updateArticle = async (voteChange, article_id)=>{
 }
 
 
-exports.removeComment = (comment_id)=>{
-  
 
-    return db.query('DELETE FROM comments WHERE comment_id = $1;', [comment_id])
 
-}
+exports.insertArticle = ({author, body, title, topic, article_img_url = 'https://arthurmillerfoundation.org/wp-content/uploads/2018/06/default-placeholder.png'})=>{
+    let queryValues =  [author, body, title, topic, article_img_url]
+   
+    const now = new Date ()
+         return db.query(`INSERT INTO articles
+         (author, body, title, topic, article_img_url, created_at, votes)
+         VALUES
+         ($1, $2, $3, $4, $5, $6, 0)
+         RETURNING * ;`, [author, body, title, topic, article_img_url, now])
+ 
+      .then((result)=>{
+      
+         const newArticle = result.rows
+ 
+            return newArticle[0]
+         })
+         
+       
+         
+     }

@@ -1,4 +1,4 @@
-const {getArticles, getArticlesById, getCommentsByArticleId, postCommentsByArticleId, patchArticle} = require('../controllers/articles.controller');
+const {getArticles, getArticlesById, getCommentsByArticleId, postCommentsByArticleId, patchArticle, postArticle} = require('../controllers/articles.controller');
  
 
 // articles-router.js
@@ -6,7 +6,10 @@ const articlesRouter = require('express').Router();
 
 articlesRouter
 .get('/', getArticles, (req, res) => {
-  res.status(200).send('All OK from /api/articles');
+  res.status(200).send('All OK from GET /api/articles');
+})
+.post('/', postArticle, (req, res) => {
+  res.status(200).send('All OK from POST /api/articles');
 });
 
 

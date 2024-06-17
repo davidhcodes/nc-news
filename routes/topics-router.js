@@ -6,7 +6,7 @@ const topicsRouter = require('express').Router();
 topicsRouter
 .route('/')
 .get(getTopics, (req, res) => {
-  res.status(200).send('All OK from /api/topics');
+  res.status(200).send('All OK from GET /api/topics');
 });
 
 

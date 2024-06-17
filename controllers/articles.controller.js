@@ -1,5 +1,5 @@
 
-const {fetchArticles, fetchArticlesById, fetchCommentsByArticleID, insertCommentsByArticleID, updateArticle, patchArticle, checkArticleExists, checkTopicExists} = require('../models/articles.models')
+const {fetchArticles, fetchArticlesById, fetchCommentsByArticleID, insertCommentsByArticleID, updateArticle, patchArticle, checkArticleExists, checkTopicExists, insertArticle} = require('../models/articles.models')
 
 exports.getArticles =  (req, res, next) =>{
    const {topic, sort_by, order_by} = req.query
@@ -81,4 +81,15 @@ exports.patchArticle = (req, res, next) => {
   
   };
 
+
+  exports.postArticle = (req, res, next) => {
+    const newArticle = req.body;
+
+    insertArticle(newArticle)
+    .then((newArticle) => {
+
+      res.status(201).send({ newArticle });
+    }).catch(next)
+  
+  };
 
