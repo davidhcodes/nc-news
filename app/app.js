@@ -2,16 +2,18 @@
 
 
 const express = require('express');
-
- /* Importing the controller files */
- const apiRouter = require('../routes/api-router');
+const cors = require('cors');
 
 
 
- /* Middleware functions */
+/* Middleware functions */
 const app = express();
-app.use(express.json())
+app.use(cors());
+app.use(express.json());
 
+
+/* Importing the controller files */
+const apiRouter = require('../routes/api-router');
 
  app.use('/api', apiRouter)
 
